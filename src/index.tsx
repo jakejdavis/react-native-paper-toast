@@ -22,6 +22,10 @@ interface ToastParams {
   action?: () => void;
   /** Toast Action Label */
   actionLabel: string;
+  /** Toast Message Style */
+  messageStyle: StyleProp<ViewStyle>;
+  /** Toast Snackbar Style */
+  snackbarStyle: StyleProp<ViewStyle>;
 }
 
 /** All params are optional */
@@ -57,6 +61,8 @@ const defaults: ToastParams = {
   visibility: false,
   action: undefined,
   actionLabel: 'DONE',
+  messageStyle: {},
+  snackbarStyle: {}
 };
 
 const reducer = (state: ToastParams, action: ToastOptions) => {
@@ -149,14 +155,14 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children, override
       <Portal>
         <Snackbar
           onDismiss={toast.hide}
-          style={types[state.type]}
+          style={[types[state.type], state.snackbarStyle]}
           wrapperStyle={computedStyle}
           duration={state.duration}
           visible={state.visibility}
           action={state.action ? { label: state.actionLabel, onPress: state.action } : undefined}
         >
           <Icon size={20} name={icons[state.type]} color="#ffffff" />
-          <Text style={styles.message}>{` ${state.message}`}</Text>
+          <Text style={[styles.message, state.messageStyle]}>{` ${state.message}`}</Text>
         </Snackbar>
       </Portal>
     </ToastContext.Provider>
